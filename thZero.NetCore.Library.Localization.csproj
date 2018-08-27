@@ -4,10 +4,10 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<AssemblyName>thZero.NetCore.Library.Localization</AssemblyName>
 		<PackageId>thZero.NetCore.Library.Localization</PackageId>
-		<PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
 		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
 		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
 		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
 		<Description></Description>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -16,7 +16,6 @@
 		<RepositoryType>GitHub</RepositoryType>
 		<PackageProjectUrl>https://github.com/thzero/thZero.NetCore.Library.Localization</PackageProjectUrl>
 		<Authors>thZero.com</Authors>
-		<Copyright></Copyright>
 		<RootNamespace>thZero.Localization</RootNamespace>
 	</PropertyGroup>
 
