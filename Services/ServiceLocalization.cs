@@ -396,16 +396,12 @@ namespace thZero.Services
 		{
 			return base.GetHashCode();
 		}
-		#endregion
+        #endregion
 
-		#region Public Properties
-		public Dictionary<string, CacheInfoCulture> Cultures { get { return _cultures; } }
-		#endregion
-
-		#region Fields
-		private Dictionary<string, CacheInfoCulture> _cultures = new Dictionary<string, CacheInfoCulture>();
-		#endregion
-	}
+        #region Public Properties
+        public Dictionary<string, CacheInfoCulture> Cultures { get; } = new Dictionary<string, CacheInfoCulture>();
+        #endregion
+    }
 
 	public class CacheInfoCulture
 	{
@@ -442,14 +438,10 @@ namespace thZero.Services
 		{
 			return base.GetHashCode();
 		}
-		#endregion
+        #endregion
 
-		#region Public Properties
-		public Dictionary<string, string> Values { get { return _values; } }
-		#endregion
-
-		#region Fields
-		private Dictionary<string, string> _values = new Dictionary<string, string>();
-		#endregion
-	}
+        #region Public Properties
+        public Dictionary<string, string> Values { get; } = new Dictionary<string, string>();
+        #endregion
+    }
 }

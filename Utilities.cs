@@ -96,9 +96,9 @@ namespace thZero.Utilities
 				{
 					try
 					{
-						_cultureDefault = new CultureInfo(defaultCultureTag);
-						CultureInfo.DefaultThreadCurrentCulture = _cultureDefault;
-						CultureInfo.DefaultThreadCurrentUICulture = _cultureDefault;
+						Default = new CultureInfo(defaultCultureTag);
+						CultureInfo.DefaultThreadCurrentCulture = Default;
+						CultureInfo.DefaultThreadCurrentUICulture = Default;
 						found = true;
 					}
 					catch (Exception) { }
@@ -107,7 +107,7 @@ namespace thZero.Utilities
 				if (!found)
 				{
 					log.Warn(Declaration, string.Concat("Unable to find the culture for '", defaultCultureTag, "'."));
-					_cultureDefault = CultureInfo.CurrentCulture;
+					Default = CultureInfo.CurrentCulture;
 				}
 			}
 			catch (Exception ex)
@@ -116,15 +116,12 @@ namespace thZero.Utilities
 				throw;
 			}
 		}
-		#endregion
+        #endregion
 
-		#region Public Properties
-		public static CultureInfo Default
-		{
-			get { return _cultureDefault; }
-		}
+        #region Public Properties
+        public static CultureInfo Default { get; private set; } = CultureInfo.CurrentCulture;
 
-		public static string Name
+        public static string Name
 		{
 			get
 			{
@@ -142,14 +139,10 @@ namespace thZero.Utilities
 				return name;
 			}
 		}
-		#endregion
+        #endregion
 
-		#region Fields
-		private static CultureInfo _cultureDefault = CultureInfo.CurrentCulture;
-		#endregion
-
-		#region Constants
-		private const string DefaultCultureTag = "en-US";
+        #region Constants
+        private const string DefaultCultureTag = "en-US";
 		#endregion
 	}
 
