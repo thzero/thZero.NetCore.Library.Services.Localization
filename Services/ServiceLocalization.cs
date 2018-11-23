@@ -37,6 +37,7 @@ namespace thZero.Services
 		#region Public Methods
 		public void Initialize(IServiceLocalizationIntializer initializer, Type type)
 		{
+            ResourceType = null;
 			ResourceType = type;
 
 			_initializer = initializer as ServiceLocalizationInitializer;
