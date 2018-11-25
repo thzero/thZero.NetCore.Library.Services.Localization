@@ -23,19 +23,187 @@ using System.Globalization;
 using System.Reflection;
 using System.Threading;
 
+using Microsoft.Extensions.Logging;
+
 using Microsoft.Extensions.Localization;
 
 namespace thZero.Services
 {
+    /// <summary>
+    /// Globalization and Localization using https://docs.asp.net/en/latest/fundamentals/localization.html
+    /// </summary>
+    public sealed class ServiceLocalizationFactory : Internal.ServiceLocalizationBase<ServiceLocalizationFactory>, IServiceLocalization
+    {
+        private static readonly thZero.Services.IServiceLog log = thZero.Factory.Instance.RetrieveLogger(typeof(ServiceLocalizationFactory));
+
+        public ServiceLocalizationFactory() : base(log, null)
+        {
+        }
+    }
+
+    public sealed class ServiceLocalization : ServiceLoggableBase<ServiceLocalization>, IServiceLocalization
+    {
+        public ServiceLocalization(ILogger<ServiceLocalization> logger) : base(logger)
+        {
+            _instance = new Internal.ServiceLocalizationBase<ServiceLocalization>(null, logger);
+        }
+
+        #region Public Methods
+        public void Initialize(IServiceLocalizationIntializer initializer, Type type)
+        {
+            _instance.Initialize(initializer, type);
+        }
+
+        #region Add Cultures
+        public void AddCultureResource(string resourceName)
+        {
+            _instance.AddCultureResource(resourceName);
+        }
+
+        public void AddCultureResource(System.Reflection.Assembly assembly)
+        {
+            _instance.AddCultureResource(assembly);
+        }
+
+        public void AddCultureResourceType(CultureInfo culture, string name)
+        {
+            _instance.AddCultureResourceType(culture, name);
+        }
+        #endregion
+
+        #region Get Localized Strings
+        public string GetLocalizedString(string abbreviation, params object[] args)
+        {
+            return _instance.GetLocalizedString(abbreviation, args);
+        }
+
+        public string GetLocalizedStringDefault(string abbreviation, string defaultValue, params object[] args)
+        {
+            return _instance.GetLocalizedString(abbreviation, defaultValue, args);
+        }
+
+        public string GetLocalizedStringWithResource(string abbreviation, string resource, params object[] args)
+        {
+            return _instance.GetLocalizedString(abbreviation, resource, args);
+        }
+
+        public string GetLocalizedStringWithResourceDefault(string abbreviation, string resource, string defaultValue, params object[] args)
+        {
+            return _instance.GetLocalizedString(abbreviation, resource, defaultValue, args);
+        }
+
+        public string GetLocalizedString(CultureInfo culture, string abbreviation, params object[] args)
+        {
+            return _instance.GetLocalizedString(culture, abbreviation, args);
+        }
+
+        public string GetLocalizedStringDefault(CultureInfo culture, string abbreviation, string defaultValue, params object[] args)
+        {
+            return _instance.GetLocalizedString(culture, abbreviation, defaultValue, args);
+        }
+
+        public string GetLocalizedStringWithResource(CultureInfo culture, string abbreviation, string resource, params object[] args)
+        {
+            return _instance.GetLocalizedString(culture, abbreviation, resource, args);
+        }
+
+        public string GetLocalizedStringWithResourceDefault(CultureInfo culture, string abbreviation, string resource, string defaultValue, params object[] args)
+        {
+            return _instance.GetLocalizedString(culture, abbreviation, resource, defaultValue, args);
+        }
+        #endregion
+
+        #region Load
+        public void LoadCultureResources(string rootPath)
+        {
+            _instance.LoadCultureResources(rootPath);
+        }
+
+        public void LoadCultureResources(string rootPath, string resourceFolder)
+        {
+            _instance.LoadCultureResources(rootPath, resourceFolder);
+        }
+
+        public void LoadCultureResourcesClient()
+        {
+            _instance.LoadCultureResourcesClient();
+        }
+
+        public void LoadCultureResourcesAll(string rootPath, string resourceFolder)
+        {
+            _instance.LoadCultureResourcesAll(rootPath, resourceFolder);
+        }
+
+        public void LoadCultureResourcesAll(string rootPath, string resourceFolder, CultureInfo defaultCulture)
+        {
+            _instance.LoadCultureResourcesAll(rootPath, resourceFolder, defaultCulture);
+        }
+
+        public void LoadCultureResources(CultureInfo culture, string rootPath, string resourceFolder)
+        {
+            _instance.LoadCultureResources(culture, rootPath, resourceFolder);
+        }
+
+        public void LoadCultureResources(CultureInfo culture, string rootPath, string resourceFolder, CultureInfo defaultCulture)
+        {
+            _instance.LoadCultureResources(culture, rootPath, resourceFolder, defaultCulture);
+        }
+        #endregion
+
+        #endregion
+
+        #region Public Properties
+        public CultureInfo DefaultCulture
+        {
+            get { return _instance.DefaultCulture; }
+            set { _instance.DefaultCulture = value; }
+        }
+
+        public string DefaultResource
+        {
+            get { return _instance.DefaultResource; }
+            set { _instance.DefaultResource = value; }
+        }
+
+        public string ResourceFolder
+        {
+            get { return _instance.ResourceFolder; }
+            set { _instance.ResourceFolder = value; }
+        }
+
+        public string RootPath
+        {
+            get { return _instance.RootPath; }
+            set { _instance.RootPath = value; }
+        }
+        #endregion
+
+        #region Fields
+        private static Internal.ServiceLocalizationBase<ServiceLocalization> _instance;
+        #endregion
+    }
+
+    public class ServiceLocalizationInitializer : IServiceLocalizationIntializer
+    {
+        #region Public Properties
+        public IStringLocalizerFactory Factory { get; set; }
+        #endregion
+    }
+}
+
+namespace thZero.Services.Internal
+{
 	/// <summary>
 	/// Globalization and Localization using https://docs.asp.net/en/latest/fundamentals/localization.html
 	/// </summary>
-	public sealed class ServiceLocalization : IServiceLocalization
-	{
-		private static readonly thZero.Services.IServiceLog log = thZero.Factory.Instance.RetrieveLogger(typeof(ServiceLocalization));
+	public class ServiceLocalizationBase<TService> : IntermediaryServiceBase<TService>
+    {
+        public ServiceLocalizationBase(thZero.Services.IServiceLog log, ILogger<TService> logger) : base(log, logger)
+        {
+        }
 
-		#region Public Methods
-		public void Initialize(IServiceLocalizationIntializer initializer, Type type)
+        #region Public Methods
+        public void Initialize(IServiceLocalizationIntializer initializer, Type type)
 		{
             ResourceType = null;
 			ResourceType = type;
@@ -238,8 +406,9 @@ namespace thZero.Services
 						value = output.Value;
 
 					if (canCache)
-					{
-						log.Diagnostic(Declaration, "Expression", expression);
+                    {
+                        Log?.Diagnostic(Declaration, "Expression", expression);
+                        Logger?.LogDebug(Declaration, "Expression", expression);
 						SetResourceValueToCache(value, expression, resource, culture);
 					}
 				}
@@ -254,9 +423,10 @@ namespace thZero.Services
 				return value;
 			}
 			catch (Exception ex)
-			{
-				log.Error(Declaration, ex);
-				throw;
+            {
+                Log?.Error(Declaration, ex);
+                Logger?.LogError(Declaration, ex);
+                throw;
 			}
 			finally
 			{
@@ -288,9 +458,10 @@ namespace thZero.Services
 				return cultures.Values[expression];
 			}
 			catch (Exception ex)
-			{
-				log.Error(Declaration, ex);
-				throw;
+            {
+                Log?.Error(Declaration, ex);
+                Logger?.LogError(Declaration, ex);
+                throw;
 			}
 		}
 
@@ -332,9 +503,10 @@ namespace thZero.Services
 				contentCulture.Values.Add(expression, value);
 			}
 			catch (Exception ex)
-			{
-				log.Error(Declaration, ex);
-				throw;
+            {
+                Log?.Error(Declaration, ex);
+                Logger?.LogError(Declaration, ex);
+                throw;
 			}
 		}
 		#endregion
@@ -352,13 +524,6 @@ namespace thZero.Services
 		private static readonly object _lockLocalizer = new object();
 
 		private static readonly ReaderWriterLockSlim LockCache = new ReaderWriterLockSlim();
-		#endregion
-	}
-
-	public class ServiceLocalizationInitializer : IServiceLocalizationIntializer
-	{
-		#region Public Properties
-		public IStringLocalizerFactory Factory { get; set; }
 		#endregion
 	}
 
