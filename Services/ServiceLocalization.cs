@@ -17,15 +17,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
  * ------------------------------------------------------------------------- */
 
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
-
-using Microsoft.Extensions.Logging;
-
-using Microsoft.Extensions.Localization;
 
 namespace thZero.Services
 {
@@ -41,7 +39,7 @@ namespace thZero.Services
         }
     }
 
-    public sealed class ServiceLocalization : ServiceLoggableBase<ServiceLocalization>, IServiceLocalization
+    public sealed class ServiceLocalization : ServiceBase<ServiceLocalization>, IServiceLocalization
     {
         public ServiceLocalization(ILogger<ServiceLocalization> logger) : base(logger)
         {
@@ -193,10 +191,10 @@ namespace thZero.Services
 
 namespace thZero.Services.Internal
 {
-	/// <summary>
-	/// Globalization and Localization using https://docs.asp.net/en/latest/fundamentals/localization.html
-	/// </summary>
-	public class ServiceLocalizationBase<TService> : IntermediaryServiceBase<TService>
+    /// <summary>
+    /// Globalization and Localization using https://docs.asp.net/en/latest/fundamentals/localization.html
+    /// </summary>
+    public class ServiceLocalizationBase<TService> : IntermediaryServiceBase<TService>
     {
         public ServiceLocalizationBase(thZero.Services.IServiceLog log, ILogger<TService> logger) : base(log, logger)
         {
@@ -204,364 +202,366 @@ namespace thZero.Services.Internal
 
         #region Public Methods
         public void Initialize(IServiceLocalizationIntializer initializer, Type type)
-		{
+        {
             ResourceType = null;
-			ResourceType = type;
+            ResourceType = type;
 
-			_initializer = initializer as ServiceLocalizationInitializer;
-			if (_initializer == null)
-				throw new Exception("Invalid initializer."); // TODO
+            _initializer = initializer as ServiceLocalizationInitializer;
+            if (_initializer == null)
+                throw new Exception("Invalid initializer."); // TODO
 
-			_factory = _initializer.Factory;
-			if (_factory == null)
-				throw new Exception("Invalid factory."); // TODO
-		}
+            _factory = _initializer.Factory;
+            if (_factory == null)
+                throw new Exception("Invalid factory."); // TODO
+        }
 
-		#region Add Cultures
-		public void AddCultureResource(string resourceName)
-		{
-		}
+        #region Add Cultures
+        public void AddCultureResource(string resourceName)
+        {
+        }
 
-		public void AddCultureResource(System.Reflection.Assembly assembly)
-		{
-		}
+        public void AddCultureResource(System.Reflection.Assembly assembly)
+        {
+        }
 
-		public void AddCultureResourceType(CultureInfo culture, string name)
-		{
-		}
-		#endregion
+        public void AddCultureResourceType(CultureInfo culture, string name)
+        {
+        }
+        #endregion
 
-		#region Get Localized Strings
-		public string GetLocalizedString(string abbreviation, params object[] args)
-		{
-			return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, null, null, args);
-		}
+        #region Get Localized Strings
+        public string GetLocalizedString(string abbreviation, params object[] args)
+        {
+            return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, null, null, args);
+        }
 
-		public string GetLocalizedStringDefault(string abbreviation, string defaultValue, params object[] args)
-		{
-			return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, null, defaultValue, args);
-		}
+        public string GetLocalizedStringDefault(string abbreviation, string defaultValue, params object[] args)
+        {
+            return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, null, defaultValue, args);
+        }
 
-		public string GetLocalizedStringWithResource(string abbreviation, string resource, params object[] args)
-		{
-			return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, resource, null, args);
-		}
+        public string GetLocalizedStringWithResource(string abbreviation, string resource, params object[] args)
+        {
+            return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, resource, null, args);
+        }
 
-		public string GetLocalizedStringWithResourceDefault(string abbreviation, string resource, string defaultValue, params object[] args)
-		{
-			return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, resource, defaultValue, args);
-		}
+        public string GetLocalizedStringWithResourceDefault(string abbreviation, string resource, string defaultValue, params object[] args)
+        {
+            return GetResourceValue(CultureInfo.CurrentUICulture, abbreviation, resource, defaultValue, args);
+        }
 
-		public string GetLocalizedString(CultureInfo culture, string abbreviation, params object[] args)
-		{
-			return GetResourceValue(culture, abbreviation, null, null, args);
-		}
+        public string GetLocalizedString(CultureInfo culture, string abbreviation, params object[] args)
+        {
+            return GetResourceValue(culture, abbreviation, null, null, args);
+        }
 
-		public string GetLocalizedStringDefault(CultureInfo culture, string abbreviation, string defaultValue, params object[] args)
-		{
-			return GetResourceValue(culture, abbreviation, null, defaultValue, args);
-		}
+        public string GetLocalizedStringDefault(CultureInfo culture, string abbreviation, string defaultValue, params object[] args)
+        {
+            return GetResourceValue(culture, abbreviation, null, defaultValue, args);
+        }
 
-		public string GetLocalizedStringWithResource(CultureInfo culture, string abbreviation, string resource, params object[] args)
-		{
-			return GetResourceValue(culture, abbreviation, resource, null, args);
-		}
+        public string GetLocalizedStringWithResource(CultureInfo culture, string abbreviation, string resource, params object[] args)
+        {
+            return GetResourceValue(culture, abbreviation, resource, null, args);
+        }
 
-		public string GetLocalizedStringWithResourceDefault(CultureInfo culture, string abbreviation, string resource, string defaultValue, params object[] args)
-		{
-			return GetResourceValue(culture, abbreviation, resource, defaultValue, args);
-		}
-		#endregion
+        public string GetLocalizedStringWithResourceDefault(CultureInfo culture, string abbreviation, string resource, string defaultValue, params object[] args)
+        {
+            return GetResourceValue(culture, abbreviation, resource, defaultValue, args);
+        }
+        #endregion
 
-		#region Load
-		public void LoadCultureResources(string rootPath)
-		{
-		}
+        #region Load
+        public void LoadCultureResources(string rootPath)
+        {
+        }
 
-		public void LoadCultureResources(string rootPath, string resourceFolder)
-		{
-		}
+        public void LoadCultureResources(string rootPath, string resourceFolder)
+        {
+        }
 
-		public void LoadCultureResourcesClient()
-		{
-		}
+        public void LoadCultureResourcesClient()
+        {
+        }
 
-		public void LoadCultureResourcesAll(string rootPath, string resourceFolder)
-		{
-		}
+        public void LoadCultureResourcesAll(string rootPath, string resourceFolder)
+        {
+        }
 
-		public void LoadCultureResourcesAll(string rootPath, string resourceFolder, CultureInfo defaultCulture)
-		{
-		}
+        public void LoadCultureResourcesAll(string rootPath, string resourceFolder, CultureInfo defaultCulture)
+        {
+        }
 
-		public void LoadCultureResources(CultureInfo culture, string rootPath, string resourceFolder)
-		{
-		}
+        public void LoadCultureResources(CultureInfo culture, string rootPath, string resourceFolder)
+        {
+        }
 
-		public void LoadCultureResources(CultureInfo culture, string rootPath, string resourceFolder, CultureInfo defaultCulture)
-		{
-		}
-		#endregion
+        public void LoadCultureResources(CultureInfo culture, string rootPath, string resourceFolder, CultureInfo defaultCulture)
+        {
+        }
+        #endregion
 
-		#endregion
+        #endregion
 
-		#region Public Properties
-		public CultureInfo DefaultCulture
-		{
-			get { return CultureInfo.CurrentUICulture; }
-			set { }
-		}
+        #region Public Properties
+        public CultureInfo DefaultCulture
+        {
+            get { return CultureInfo.CurrentUICulture; }
+            set { }
+        }
 
-		public string DefaultResource
-		{
-			get { return _defaultResource; }
-			set { _defaultResource = value; }
-		}
+        public string DefaultResource
+        {
+            get { return _defaultResource; }
+            set { _defaultResource = value; }
+        }
 
-		public string ResourceFolder
-		{
-			get;
-			set;
-		}
+        public string ResourceFolder
+        {
+            get;
+            set;
+        }
 
-		public string RootPath
-		{
-			get;
-			set;
-		}
-		#endregion
+        public string RootPath
+        {
+            get;
+            set;
+        }
+        #endregion
 
-		#region Private Methods
-		private IStringLocalizer GetLocalizer(string key)
-		{
-			if (_localizers.ContainsKey(key))
-				return _localizers[key];
+        #region Private Methods
+#pragma warning disable CA1822 // Mark members as static
+        private IStringLocalizer GetLocalizer(string key)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            if (_localizers.ContainsKey(key))
+                return _localizers[key];
 
-			lock (_lockLocalizer)
-			{
-				if (_localizers.ContainsKey(key))
-					return _localizers[key];
+            lock (_lockLocalizer)
+            {
+                if (_localizers.ContainsKey(key))
+                    return _localizers[key];
 
-				var assemblyName = ResourceType.GetTypeInfo().Assembly.GetName().Name;
-				var localizer = _factory.Create(key, assemblyName);
-				_localizers.Add(key, localizer);
-				return localizer;
-			}
-		}
+                var assemblyName = ResourceType.GetTypeInfo().Assembly.GetName().Name;
+                var localizer = _factory.Create(key, assemblyName);
+                _localizers.Add(key, localizer);
+                return localizer;
+            }
+        }
 
-		private string GetResourceValue(CultureInfo culture, string expression, string resource, string defaultValue, object[] args)
-		{
-			Enforce.AgainstNull(() => culture);
-			Enforce.AgainstNullOrEmpty(() => expression);
+        private string GetResourceValue(CultureInfo culture, string expression, string resource, string defaultValue, object[] args)
+        {
+            Enforce.AgainstNull(() => culture);
+            Enforce.AgainstNullOrEmpty(() => expression);
 
-			const string Declaration = "GetResourceValue";
+            const string Declaration = "GetResourceValue";
 
-			try
-			{
-				LockCache.EnterUpgradeableReadLock();
+            try
+            {
+                LockCache.EnterUpgradeableReadLock();
 
-				if (expression.Contains(","))
-				{
-					string[] split = expression.Split(',');
-					resource = split[0].Trim();
-				}
+                if (expression.Contains(","))
+                {
+                    string[] split = expression.Split(',');
+                    resource = split[0].Trim();
+                }
 
-				if (string.IsNullOrEmpty(resource))
-					resource = DefaultResource;
+                if (string.IsNullOrEmpty(resource))
+                    resource = DefaultResource;
 
-				string value = GetResourceValueFromCache(expression, resource, culture);
-				if (value != null)
-				{
-					if ((args != null) && (args.Length > 0))
-						value = string.Format(value, args);
+                string value = GetResourceValueFromCache(expression, resource, culture);
+                if (value != null)
+                {
+                    if ((args != null) && (args.Length > 0))
+                        value = string.Format(value, args);
 
-					return value;
-				}
+                    return value;
+                }
 
-				try
-				{
-					LockCache.EnterWriteLock();
+                try
+                {
+                    LockCache.EnterWriteLock();
 
-					value = string.Concat("[", expression, "]");
-					if (defaultValue != null)
-						value = defaultValue;
+                    value = string.Concat("[", expression, "]");
+                    if (defaultValue != null)
+                        value = defaultValue;
 
-					bool canCache = true;
-					IStringLocalizer localizer = GetLocalizer(resource);
-					if (localizer == null)
-					{
-						canCache = false;
-						if (defaultValue != null)
-							value = defaultValue;
-					}
+                    bool canCache = true;
+                    IStringLocalizer localizer = GetLocalizer(resource);
+                    if (localizer == null)
+                    {
+                        canCache = false;
+                        if (defaultValue != null)
+                            value = defaultValue;
+                    }
 
-					var output = localizer[expression];
-					if (output.ResourceNotFound)
-					{
-						canCache = false;
-						if (defaultValue != null)
-							value = defaultValue;
-					}
-					else
-						value = output.Value;
+                    var output = localizer[expression];
+                    if (output.ResourceNotFound)
+                    {
+                        canCache = false;
+                        if (defaultValue != null)
+                            value = defaultValue;
+                    }
+                    else
+                        value = output.Value;
 
-					if (canCache)
+                    if (canCache)
                     {
                         Log?.Diagnostic(Declaration, "Expression", expression);
                         Logger?.LogDebug(Declaration, "Expression", expression);
-						SetResourceValueToCache(value, expression, resource, culture);
-					}
-				}
-				finally
-				{
-					LockCache.ExitWriteLock();
-				}
+                        SetResourceValueToCache(value, expression, resource, culture);
+                    }
+                }
+                finally
+                {
+                    LockCache.ExitWriteLock();
+                }
 
-				if ((args != null) && (args.Length > 0))
-					value = string.Format(value, args);
+                if ((args != null) && (args.Length > 0))
+                    value = string.Format(value, args);
 
-				return value;
-			}
-			catch (Exception ex)
+                return value;
+            }
+            catch (Exception ex)
             {
                 Log?.Error(Declaration, ex);
                 Logger?.LogError(Declaration, ex);
                 throw;
-			}
-			finally
-			{
-				LockCache.ExitUpgradeableReadLock();
-			}
-		}
+            }
+            finally
+            {
+                LockCache.ExitUpgradeableReadLock();
+            }
+        }
 
-		private string GetResourceValueFromCache(string expression, string resource, CultureInfo culture)
-		{
-			Enforce.AgainstNull(() => culture);
-			Enforce.AgainstNullOrEmpty(() => expression);
-			Enforce.AgainstNullOrEmpty(() => resource);
+        private string GetResourceValueFromCache(string expression, string resource, CultureInfo culture)
+        {
+            Enforce.AgainstNull(() => culture);
+            Enforce.AgainstNullOrEmpty(() => expression);
+            Enforce.AgainstNullOrEmpty(() => resource);
 
-			const string Declaration = "GetResourceValueFromCache";
+            const string Declaration = "GetResourceValueFromCache";
 
-			try
-			{
-				if (!_cache.ContainsKey(resource))
-					return null;
+            try
+            {
+                if (!_cache.ContainsKey(resource))
+                    return null;
 
-				CacheInfoResource resourceContent = _cache[resource];
-				if (!resourceContent.Cultures.ContainsKey(culture.Name))
-					return null;
+                CacheInfoResource resourceContent = _cache[resource];
+                if (!resourceContent.Cultures.ContainsKey(culture.Name))
+                    return null;
 
-				CacheInfoCulture cultures = resourceContent.Cultures[culture.Name];
-				if (!cultures.Values.ContainsKey(expression))
-					return null;
+                CacheInfoCulture cultures = resourceContent.Cultures[culture.Name];
+                if (!cultures.Values.ContainsKey(expression))
+                    return null;
 
-				return cultures.Values[expression];
-			}
-			catch (Exception ex)
+                return cultures.Values[expression];
+            }
+            catch (Exception ex)
             {
                 Log?.Error(Declaration, ex);
                 Logger?.LogError(Declaration, ex);
                 throw;
-			}
-		}
+            }
+        }
 
-		private void SetResourceValueToCache(string value, string expression, string resource, CultureInfo culture)
-		{
-			Enforce.AgainstNull(() => culture);
-			Enforce.AgainstNullOrEmpty(() => expression);
+        private void SetResourceValueToCache(string value, string expression, string resource, CultureInfo culture)
+        {
+            Enforce.AgainstNull(() => culture);
+            Enforce.AgainstNullOrEmpty(() => expression);
 
-			const string Declaration = "SetResourceValueToCache";
+            const string Declaration = "SetResourceValueToCache";
 
-			try
-			{
-				if (string.IsNullOrEmpty(value))
-					return;
+            try
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
 
-				if (!expression.Contains(","))
-				{
-					if (string.IsNullOrEmpty(resource))
-						resource = DefaultResource;
-				}
-				else
-				{
-					string[] values = expression.Split(',');
-					resource = values[0].Trim();
-				}
+                if (!expression.Contains(","))
+                {
+                    if (string.IsNullOrEmpty(resource))
+                        resource = DefaultResource;
+                }
+                else
+                {
+                    string[] values = expression.Split(',');
+                    resource = values[0].Trim();
+                }
 
-				CacheInfoResource contentResource = new CacheInfoResource();
-				if (!_cache.ContainsKey(resource))
-					_cache.Add(resource, contentResource);
-				else
-					contentResource = _cache[resource];
+                CacheInfoResource contentResource = new();
+                if (!_cache.ContainsKey(resource))
+                    _cache.Add(resource, contentResource);
+                else
+                    contentResource = _cache[resource];
 
-				CacheInfoCulture contentCulture = new CacheInfoCulture();
-				if (!contentResource.Cultures.ContainsKey(culture.Name))
-					contentResource.Cultures.Add(culture.Name, contentCulture);
-				else
-					contentCulture = contentResource.Cultures[culture.Name];
+                CacheInfoCulture contentCulture = new();
+                if (!contentResource.Cultures.ContainsKey(culture.Name))
+                    contentResource.Cultures.Add(culture.Name, contentCulture);
+                else
+                    contentCulture = contentResource.Cultures[culture.Name];
 
-				contentCulture.Values.Add(expression, value);
-			}
-			catch (Exception ex)
+                contentCulture.Values.Add(expression, value);
+            }
+            catch (Exception ex)
             {
                 Log?.Error(Declaration, ex);
                 Logger?.LogError(Declaration, ex);
                 throw;
-			}
-		}
-		#endregion
+            }
+        }
+        #endregion
 
-		#region Private Properties
-		private static Type ResourceType { get; set; }
-		#endregion
+        #region Private Properties
+        private static Type ResourceType { get; set; }
+        #endregion
 
-		#region Fields
-		private static Dictionary<string, CacheInfoResource> _cache = new Dictionary<string, CacheInfoResource>();
-		private static string _defaultResource = "strings";
-		private static IStringLocalizerFactory _factory;
-		private static ServiceLocalizationInitializer _initializer;
-		private static IDictionary<string, IStringLocalizer> _localizers = new Dictionary<string, IStringLocalizer>();
-		private static readonly object _lockLocalizer = new object();
+        #region Fields
+        private static readonly Dictionary<string, CacheInfoResource> _cache = new();
+        private static string _defaultResource = "strings";
+        private static IStringLocalizerFactory _factory;
+        private static ServiceLocalizationInitializer _initializer;
+        private static readonly IDictionary<string, IStringLocalizer> _localizers = new Dictionary<string, IStringLocalizer>();
+        private static readonly object _lockLocalizer = new();
 
-		private static readonly ReaderWriterLockSlim LockCache = new ReaderWriterLockSlim();
-		#endregion
-	}
+        private static readonly ReaderWriterLockSlim LockCache = new();
+        #endregion
+    }
 
-	public class CacheInfoResource
-	{
-		#region Public Operators
-		public static bool operator ==(CacheInfoResource c1, CacheInfoResource c2)
-		{
-			Enforce.AgainstNull(() => c1);
-			Enforce.AgainstNull(() => c2);
+    public class CacheInfoResource
+    {
+        #region Public Operators
+        public static bool operator ==(CacheInfoResource c1, CacheInfoResource c2)
+        {
+            Enforce.AgainstNull(() => c1);
+            Enforce.AgainstNull(() => c2);
 
-			return c1.Equals(c2);
-		}
+            return c1.Equals(c2);
+        }
 
-		public static bool operator !=(CacheInfoResource c1, CacheInfoResource c2)
-		{
-			Enforce.AgainstNull(() => c1);
-			Enforce.AgainstNull(() => c2);
+        public static bool operator !=(CacheInfoResource c1, CacheInfoResource c2)
+        {
+            Enforce.AgainstNull(() => c1);
+            Enforce.AgainstNull(() => c2);
 
-			return !c1.Equals(c2);
-		}
-		#endregion
+            return !c1.Equals(c2);
+        }
+        #endregion
 
-		#region Public Methods
-		public override bool Equals(object obj)
-		{
-			if (obj == null)
-				return false;
-			if (!(obj is CacheInfoResource))
-				return false;
+        #region Public Methods
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (!(obj is CacheInfoResource))
+                return false;
 
-			return ((CacheInfoResource)obj).Equals(this);
-		}
+            return ((CacheInfoResource)obj).Equals(this);
+        }
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         #endregion
 
         #region Public Properties
@@ -569,41 +569,41 @@ namespace thZero.Services.Internal
         #endregion
     }
 
-	public class CacheInfoCulture
-	{
-		#region Public Operators
-		public static bool operator ==(CacheInfoCulture c1, CacheInfoCulture c2)
-		{
-			Enforce.AgainstNull(() => c1);
-			Enforce.AgainstNull(() => c2);
+    public class CacheInfoCulture
+    {
+        #region Public Operators
+        public static bool operator ==(CacheInfoCulture c1, CacheInfoCulture c2)
+        {
+            Enforce.AgainstNull(() => c1);
+            Enforce.AgainstNull(() => c2);
 
-			return c1.Equals(c2);
-		}
+            return c1.Equals(c2);
+        }
 
-		public static bool operator !=(CacheInfoCulture c1, CacheInfoCulture c2)
-		{
-			Enforce.AgainstNull(() => c1);
-			Enforce.AgainstNull(() => c2);
+        public static bool operator !=(CacheInfoCulture c1, CacheInfoCulture c2)
+        {
+            Enforce.AgainstNull(() => c1);
+            Enforce.AgainstNull(() => c2);
 
-			return !c1.Equals(c2);
-		}
-		#endregion
+            return !c1.Equals(c2);
+        }
+        #endregion
 
-		#region Public Methods
-		public override bool Equals(object obj)
-		{
-			if (obj == null)
-				return false;
-			if (!(obj is CacheInfoCulture))
-				return false;
+        #region Public Methods
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (!(obj is CacheInfoCulture))
+                return false;
 
-			return ((CacheInfoCulture)obj).Equals(this);
-		}
+            return ((CacheInfoCulture)obj).Equals(this);
+        }
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         #endregion
 
         #region Public Properties
