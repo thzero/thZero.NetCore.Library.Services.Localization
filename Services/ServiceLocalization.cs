@@ -330,9 +330,7 @@ namespace thZero.Services.Internal
         #endregion
 
         #region Private Methods
-#pragma warning disable CA1822 // Mark members as static
         private IStringLocalizer GetLocalizer(string key)
-#pragma warning restore CA1822 // Mark members as static
         {
             if (_localizers.ContainsKey(key))
                 return _localizers[key];
