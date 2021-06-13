@@ -406,7 +406,7 @@ namespace thZero.Services.Internal
                     if (canCache)
                     {
                         Log?.Diagnostic(Declaration, "Expression", expression);
-                        Logger?.LogDebug(Declaration, "Expression", expression);
+                        Logger?.LogDebug2(Declaration, "Expression", expression);
                         SetResourceValueToCache(value, expression, resource, culture);
                     }
                 }
@@ -423,7 +423,7 @@ namespace thZero.Services.Internal
             catch (Exception ex)
             {
                 Log?.Error(Declaration, ex);
-                Logger?.LogError(Declaration, ex);
+                Logger?.LogError2(Declaration, ex);
                 throw;
             }
             finally
@@ -458,7 +458,7 @@ namespace thZero.Services.Internal
             catch (Exception ex)
             {
                 Log?.Error(Declaration, ex);
-                Logger?.LogError(Declaration, ex);
+                Logger?.LogError2(Declaration, ex);
                 throw;
             }
         }
@@ -503,7 +503,7 @@ namespace thZero.Services.Internal
             catch (Exception ex)
             {
                 Log?.Error(Declaration, ex);
-                Logger?.LogError(Declaration, ex);
+                Logger?.LogError2(Declaration, ex);
                 throw;
             }
         }
