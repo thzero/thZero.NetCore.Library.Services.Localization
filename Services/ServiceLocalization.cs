@@ -208,11 +208,11 @@ namespace thZero.Services.Internal
 
             _initializer = initializer as ServiceLocalizationInitializer;
             if (_initializer == null)
-                throw new Exception("Invalid initializer."); // TODO
+                throw new InvalidInitializeLocationException();
 
             _factory = _initializer.Factory;
             if (_factory == null)
-                throw new Exception("Invalid factory."); // TODO
+                throw new InvalidFactoryLocationException();
         }
 
         #region Add Cultures
@@ -330,7 +330,7 @@ namespace thZero.Services.Internal
         #endregion
 
         #region Private Methods
-        private IStringLocalizer GetLocalizer(string key)
+        private static IStringLocalizer GetLocalizer(string key)
         {
             if (_localizers.ContainsKey(key))
                 return _localizers[key];
@@ -523,6 +523,20 @@ namespace thZero.Services.Internal
 
         private static readonly ReaderWriterLockSlim LockCache = new();
         #endregion
+    }
+
+    public class InvalidInitializeLocationException : Exception
+    {
+        public InvalidInitializeLocationException() : base("Invalid initializer.")
+        {
+        }
+    }
+
+    public class InvalidFactoryLocationException : Exception
+    {
+        public InvalidFactoryLocationException() : base("Invalid factory.")
+        {
+        }
     }
 
     public class CacheInfoResource
