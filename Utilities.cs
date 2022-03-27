@@ -42,7 +42,6 @@ namespace thZero.Utilities
             try
             {
                 bool found = false;
-                cultureTag = DefaultCultureTag;
                 if (!string.IsNullOrEmpty(cultureTag))
                 {
                     try
@@ -55,6 +54,16 @@ namespace thZero.Utilities
 
                 if (!found)
                     culture = Default;
+
+                if (culture == null)
+                {
+                    try
+                    {
+                        culture = new CultureInfo(DefaultCultureTag);
+                        found = true;
+                    }
+                    catch (Exception) { }
+                }
             }
             catch (Exception ex)
             {
